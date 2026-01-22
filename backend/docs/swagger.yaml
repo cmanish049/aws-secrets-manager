@@ -1,0 +1,205 @@
+basePath: /api
+definitions:
+  handlers.CreateSecretRequest:
+    properties:
+      description:
+        example: API key for external service
+        type: string
+      name:
+        example: my-api-key
+        type: string
+      value:
+        example: '{"key": "value"}'
+        type: string
+    required:
+    - name
+    - value
+    type: object
+  handlers.ErrorResponse:
+    properties:
+      error:
+        example: error message
+        type: string
+    type: object
+  handlers.SuccessResponse:
+    properties:
+      message:
+        example: operation successful
+        type: string
+    type: object
+  handlers.UpdateSecretRequest:
+    properties:
+      value:
+        example: '{"key": "new-value"}'
+        type: string
+    required:
+    - value
+    type: object
+  services.Secret:
+    properties:
+      description:
+        type: string
+      name:
+        type: string
+      value:
+        type: string
+    type: object
+externalDocs:
+  description: AWS Secrets Manager Documentation
+  url: https://docs.aws.amazon.com/secretsmanager/
+host: localhost:8080
+info:
+  contact:
+    email: support@example.com
+    name: API Support
+  description: |-
+    A REST API for managing AWS Secrets Manager secrets.
+    This API allows you to list, view, create, and update secrets stored in AWS Secrets Manager.
+  license:
+    name: MIT
+    url: https://opensource.org/licenses/MIT
+  title: AWS Secrets Manager Platform API
+  version: "1.0"
+paths:
+  /secrets:
+    get:
+      consumes:
+      - application/json
+      description: Returns a list of all secret names and descriptions from AWS Secrets
+        Manager
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/services.Secret'
+            type: array
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+      security:
+      - BasicAuth: []
+      summary: List all secrets
+      tags:
+      - secrets
+    post:
+      consumes:
+      - application/json
+      description: Creates a new secret in AWS Secrets Manager
+      parameters:
+      - description: Secret to create
+        in: body
+        name: secret
+        required: true
+        schema:
+          $ref: '#/definitions/handlers.CreateSecretRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/handlers.SuccessResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+      security:
+      - BasicAuth: []
+      summary: Create a new secret
+      tags:
+      - secrets
+  /secrets/{name}:
+    get:
+      consumes:
+      - application/json
+      description: Returns the value of a specific secret by name
+      parameters:
+      - description: Secret name
+        in: path
+        name: name
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/services.Secret'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+      security:
+      - BasicAuth: []
+      summary: Get a secret value
+      tags:
+      - secrets
+    put:
+      consumes:
+      - application/json
+      description: Updates the value of an existing secret in AWS Secrets Manager
+      parameters:
+      - description: Secret name
+        in: path
+        name: name
+        required: true
+        type: string
+      - description: New secret value
+        in: body
+        name: secret
+        required: true
+        schema:
+          $ref: '#/definitions/handlers.UpdateSecretRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handlers.SuccessResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handlers.ErrorResponse'
+      security:
+      - BasicAuth: []
+      summary: Update a secret
+      tags:
+      - secrets
+securityDefinitions:
+  BasicAuth:
+    type: basic
+swagger: "2.0"
