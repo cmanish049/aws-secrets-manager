@@ -48,7 +48,7 @@ export default function SecretNew() {
             id="name"
             name="name"
             className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-            placeholder="my-secret-name"
+            placeholder="prd/database"
             required
           />
         </div>
@@ -61,7 +61,7 @@ export default function SecretNew() {
             name="value"
             rows={6}
             className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 font-mono text-sm"
-            placeholder='{"key": "value"}'
+            placeholder="USERNAME=admin&#10;PASSWORD=secret123"
             required
           />
         </div>
