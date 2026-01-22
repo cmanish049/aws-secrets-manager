@@ -14,9 +14,9 @@ type SecretsService struct {
 }
 
 type Secret struct {
-	Name        string `json:"name"`
-	Value       string `json:"value,omitempty"`
-	Description string `json:"description,omitempty"`
+	Name        string `json:"name" example:"prd/database"`
+	Value       string `json:"value,omitempty" example:"USERNAME=admin\nPASSWORD=secret123"`
+	Description string `json:"description,omitempty" example:"Production database credentials"`
 }
 
 func NewSecretsService() (*SecretsService, error) {

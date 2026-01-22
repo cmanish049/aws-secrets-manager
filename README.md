@@ -5,17 +5,28 @@ A web platform to view and manage AWS Secrets Manager secrets with a React front
 ## Features
 
 - **List Secrets**: View all secrets from AWS Secrets Manager with search/filter
-- **View Secret Values**: Show/hide toggle for sensitive data
+- **View Secret Values**: View secret values with preserved formatting
 - **Create Secrets**: Add new secrets with name, value, and optional description
 - **Update Secrets**: Modify existing secret values
 - **Copy to Clipboard**: One-click copy for secret values
-- **HTTP Basic Auth**: Secure access for local development
 - **Swagger Documentation**: Interactive API documentation
+
+## Secret Format
+
+Secrets are stored as plain text and support environment variable style formatting:
+
+```
+USERNAME=admin
+PASSWORD=secret123
+API_KEY=your-api-key
+```
+
+Secret names can include slashes for organizing by environment (e.g., `prd/database`, `dev/api-keys`).
 
 ## Project Structure
 
 ```
-secrets-manager-platform/
+aws-secrets-manager/
 ├── backend/                          # Go REST API
 │   ├── cmd/
 │   │   └── server/
@@ -23,8 +34,6 @@ secrets-manager-platform/
 │   ├── internal/
 │   │   ├── handlers/
 │   │   │   └── secrets.go            # HTTP request handlers
-│   │   ├── middleware/
-│   │   │   └── auth.go               # Basic auth middleware
 │   │   └── services/
 │   │       └── secrets.go            # AWS Secrets Manager operations
 │   ├── docs/                         # Swagger documentation (generated)
@@ -36,15 +45,13 @@ secrets-manager-platform/
 │   └── go.sum
 ├── frontend/                         # React application
 │   ├── src/
-│   │   ├── components/               # Reusable UI components
 │   │   ├── routes/
 │   │   │   ├── root.tsx              # Layout with navigation
-│   │   │   ├── login.tsx             # Authentication page
 │   │   │   ├── dashboard.tsx         # Secrets list view
 │   │   │   ├── secret.tsx            # View/edit single secret
 │   │   │   └── secret-new.tsx        # Create new secret form
 │   │   ├── services/
-│   │   │   └── api.ts                # API client with auth
+│   │   │   └── api.ts                # API client
 │   │   ├── router.tsx                # React Router configuration
 │   │   ├── main.tsx                  # Application entry point
 │   │   └── index.css                 # Tailwind CSS imports
@@ -70,7 +77,8 @@ secrets-manager-platform/
 ### 1. Clone and Navigate
 
 ```bash
-cd secrets-manager-platform
+git clone https://github.com/cmanish049/aws-secrets-manager.git
+cd aws-secrets-manager
 ```
 
 ### 2. Configure Backend
@@ -89,10 +97,6 @@ Edit the `.env` file:
 ```env
 # Server Configuration
 PORT=8080
-
-# Authentication (change these for production!)
-BASIC_AUTH_USER=admin
-BASIC_AUTH_PASS=your-secure-password
 
 # AWS Configuration
 AWS_REGION=us-east-1
@@ -128,8 +132,7 @@ The frontend will start at `http://localhost:5173`
 ### 5. Access the Application
 
 1. Open http://localhost:5173 in your browser
-2. Log in with your configured credentials (default: `admin` / `admin`)
-3. Start managing your AWS secrets
+2. Start managing your AWS secrets
 
 ## Running Both Services
 
@@ -199,64 +202,6 @@ go install github.com/swaggo/swag/cmd/swag@latest
 swag init -g cmd/server/main.go -o docs
 ```
 
-## API Reference
-
-All endpoints require HTTP Basic Authentication.
-
-### List Secrets
-
-```http
-GET /api/secrets
-```
-
-**Response:**
-```json
-[
-  {
-    "name": "my-secret",
-    "description": "My application secret"
-  }
-]
-```
-
-### Get Secret Value
-
-```http
-GET /api/secrets/:name
-```
-
-**Response:**
-```json
-{
-  "name": "my-secret",
-  "value": "{\"key\": \"value\"}"
-}
-```
-
-### Create Secret
-
-```http
-POST /api/secrets
-Content-Type: application/json
-
-{
-  "name": "new-secret",
-  "value": "{\"api_key\": \"abc123\"}",
-  "description": "Optional description"
-}
-```
-
-### Update Secret
-
-```http
-PUT /api/secrets/:name
-Content-Type: application/json
-
-{
-  "value": "{\"api_key\": \"updated-value\"}"
-}
-```
-
 ## Tech Stack
 
 ### Frontend
@@ -278,8 +223,6 @@ Content-Type: application/json
 | Variable | Description | Default |
 |----------|-------------|---------|
 | `PORT` | Backend server port | `8080` |
-| `BASIC_AUTH_USER` | Authentication username | `admin` |
-| `BASIC_AUTH_PASS` | Authentication password | `admin` |
 | `AWS_REGION` | AWS region for Secrets Manager | - |
 | `AWS_ACCESS_KEY_ID` | AWS access key (optional with IAM) | - |
 | `AWS_SECRET_ACCESS_KEY` | AWS secret key (optional with IAM) | - |
@@ -302,7 +245,6 @@ npm run build
 
 ## Security Notes
 
-- This application uses HTTP Basic Auth intended for local development
+- This application is intended for local development
 - Always use HTTPS in production environments
-- Change default credentials before deployment
-- Consider using a more robust authentication method for production use
+- Consider adding authentication for production use

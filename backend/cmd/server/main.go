@@ -29,8 +29,6 @@ import (
 // @host      localhost:8080
 // @BasePath  /api
 
-// @securityDefinitions.basic  BasicAuth
-
 // @externalDocs.description  AWS Secrets Manager Documentation
 // @externalDocs.url          https://docs.aws.amazon.com/secretsmanager/
 func main() {
@@ -54,7 +52,7 @@ func main() {
 		AllowCredentials: true,
 	}))
 
-	// Swagger documentation endpoint (no auth required)
+	// Swagger documentation endpoint
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
 	api := r.Group("/api")

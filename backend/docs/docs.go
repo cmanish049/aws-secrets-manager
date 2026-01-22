@@ -24,11 +24,6 @@ const docTemplate = `{
     "paths": {
         "/secrets": {
             "get": {
-                "security": [
-                    {
-                        "BasicAuth": []
-                    }
-                ],
                 "description": "Returns a list of all secret names and descriptions from AWS Secrets Manager",
                 "consumes": [
                     "application/json"
@@ -50,12 +45,6 @@ const docTemplate = `{
                             }
                         }
                     },
-                    "401": {
-                        "description": "Unauthorized",
-                        "schema": {
-                            "$ref": "#/definitions/handlers.ErrorResponse"
-                        }
-                    },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
@@ -65,11 +54,6 @@ const docTemplate = `{
                 }
             },
             "post": {
-                "security": [
-                    {
-                        "BasicAuth": []
-                    }
-                ],
                 "description": "Creates a new secret in AWS Secrets Manager",
                 "consumes": [
                     "application/json"
@@ -105,12 +89,6 @@ const docTemplate = `{
                             "$ref": "#/definitions/handlers.ErrorResponse"
                         }
                     },
-                    "401": {
-                        "description": "Unauthorized",
-                        "schema": {
-                            "$ref": "#/definitions/handlers.ErrorResponse"
-                        }
-                    },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
@@ -122,11 +100,6 @@ const docTemplate = `{
         },
         "/secrets/{name}": {
             "get": {
-                "security": [
-                    {
-                        "BasicAuth": []
-                    }
-                ],
                 "description": "Returns the value of a specific secret by name",
                 "consumes": [
                     "application/json"
@@ -160,12 +133,6 @@ const docTemplate = `{
                             "$ref": "#/definitions/handlers.ErrorResponse"
                         }
                     },
-                    "401": {
-                        "description": "Unauthorized",
-                        "schema": {
-                            "$ref": "#/definitions/handlers.ErrorResponse"
-                        }
-                    },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
@@ -175,11 +142,6 @@ const docTemplate = `{
                 }
             },
             "put": {
-                "security": [
-                    {
-                        "BasicAuth": []
-                    }
-                ],
                 "description": "Updates the value of an existing secret in AWS Secrets Manager",
                 "consumes": [
                     "application/json"
@@ -222,12 +184,6 @@ const docTemplate = `{
                             "$ref": "#/definitions/handlers.ErrorResponse"
                         }
                     },
-                    "401": {
-                        "description": "Unauthorized",
-                        "schema": {
-                            "$ref": "#/definitions/handlers.ErrorResponse"
-                        }
-                    },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
@@ -248,15 +204,15 @@ const docTemplate = `{
             "properties": {
                 "description": {
                     "type": "string",
-                    "example": "API key for external service"
+                    "example": "Production database credentials"
                 },
                 "name": {
                     "type": "string",
-                    "example": "my-api-key"
+                    "example": "prd/database"
                 },
                 "value": {
                     "type": "string",
-                    "example": "{\"key\": \"value\"}"
+                    "example": "USERNAME=admin\nPASSWORD=secret123"
                 }
             }
         },
@@ -286,7 +242,7 @@ const docTemplate = `{
             "properties": {
                 "value": {
                     "type": "string",
-                    "example": "{\"key\": \"new-value\"}"
+                    "example": "USERNAME=admin\nPASSWORD=newsecret456"
                 }
             }
         },
@@ -294,20 +250,18 @@ const docTemplate = `{
             "type": "object",
             "properties": {
                 "description": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "Production database credentials"
                 },
                 "name": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "prd/database"
                 },
                 "value": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "USERNAME=admin\nPASSWORD=secret123"
                 }
             }
-        }
-    },
-    "securityDefinitions": {
-        "BasicAuth": {
-            "type": "basic"
         }
     },
     "externalDocs": {

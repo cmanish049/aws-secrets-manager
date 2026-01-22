@@ -34,9 +34,7 @@ type SuccessResponse struct {
 // @Accept       json
 // @Produce      json
 // @Success      200  {array}   services.Secret
-// @Failure      401  {object}  ErrorResponse
 // @Failure      500  {object}  ErrorResponse
-// @Security     BasicAuth
 // @Router       /secrets [get]
 func (h *SecretsHandler) ListSecrets(c *gin.Context) {
 	secrets, err := h.service.ListSecrets(c.Request.Context())
@@ -57,9 +55,7 @@ func (h *SecretsHandler) ListSecrets(c *gin.Context) {
 // @Param        name  path      string  true  "Secret name"
 // @Success      200   {object}  services.Secret
 // @Failure      400   {object}  ErrorResponse
-// @Failure      401   {object}  ErrorResponse
 // @Failure      500   {object}  ErrorResponse
-// @Security     BasicAuth
 // @Router       /secrets/{name} [get]
 func (h *SecretsHandler) GetSecret(c *gin.Context) {
 	name := strings.TrimPrefix(c.Param("name"), "/")
@@ -79,9 +75,9 @@ func (h *SecretsHandler) GetSecret(c *gin.Context) {
 
 // CreateSecretRequest represents the request body for creating a secret
 type CreateSecretRequest struct {
-	Name        string `json:"name" binding:"required" example:"my-api-key"`
-	Value       string `json:"value" binding:"required" example:"{\"key\": \"value\"}"`
-	Description string `json:"description" example:"API key for external service"`
+	Name        string `json:"name" binding:"required" example:"prd/database"`
+	Value       string `json:"value" binding:"required" example:"USERNAME=admin\nPASSWORD=secret123"`
+	Description string `json:"description" example:"Production database credentials"`
 }
 
 // CreateSecret godoc
@@ -93,9 +89,7 @@ type CreateSecretRequest struct {
 // @Param        secret  body      CreateSecretRequest  true  "Secret to create"
 // @Success      201     {object}  SuccessResponse
 // @Failure      400     {object}  ErrorResponse
-// @Failure      401     {object}  ErrorResponse
 // @Failure      500     {object}  ErrorResponse
-// @Security     BasicAuth
 // @Router       /secrets [post]
 func (h *SecretsHandler) CreateSecret(c *gin.Context) {
 	var req CreateSecretRequest
@@ -120,7 +114,7 @@ func (h *SecretsHandler) CreateSecret(c *gin.Context) {
 
 // UpdateSecretRequest represents the request body for updating a secret
 type UpdateSecretRequest struct {
-	Value string `json:"value" binding:"required" example:"{\"key\": \"new-value\"}"`
+	Value string `json:"value" binding:"required" example:"USERNAME=admin\nPASSWORD=newsecret456"`
 }
 
 // UpdateSecret godoc
@@ -133,9 +127,7 @@ type UpdateSecretRequest struct {
 // @Param        secret  body      UpdateSecretRequest  true  "New secret value"
 // @Success      200     {object}  SuccessResponse
 // @Failure      400     {object}  ErrorResponse
-// @Failure      401     {object}  ErrorResponse
 // @Failure      500     {object}  ErrorResponse
-// @Security     BasicAuth
 // @Router       /secrets/{name} [put]
 func (h *SecretsHandler) UpdateSecret(c *gin.Context) {
 	name := strings.TrimPrefix(c.Param("name"), "/")

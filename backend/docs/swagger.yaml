@@ -3,13 +3,15 @@ definitions:
   handlers.CreateSecretRequest:
     properties:
       description:
-        example: API key for external service
+        example: Production database credentials
         type: string
       name:
-        example: my-api-key
+        example: prd/database
         type: string
       value:
-        example: '{"key": "value"}'
+        example: |-
+          USERNAME=admin
+          PASSWORD=secret123
         type: string
     required:
     - name
@@ -30,7 +32,9 @@ definitions:
   handlers.UpdateSecretRequest:
     properties:
       value:
-        example: '{"key": "new-value"}'
+        example: |-
+          USERNAME=admin
+          PASSWORD=newsecret456
         type: string
     required:
     - value
@@ -38,10 +42,15 @@ definitions:
   services.Secret:
     properties:
       description:
+        example: Production database credentials
         type: string
       name:
+        example: prd/database
         type: string
       value:
+        example: |-
+          USERNAME=admin
+          PASSWORD=secret123
         type: string
     type: object
 externalDocs:
@@ -76,16 +85,10 @@ paths:
             items:
               $ref: '#/definitions/services.Secret'
             type: array
-        "401":
-          description: Unauthorized
-          schema:
-            $ref: '#/definitions/handlers.ErrorResponse'
         "500":
           description: Internal Server Error
           schema:
             $ref: '#/definitions/handlers.ErrorResponse'
-      security:
-      - BasicAuth: []
       summary: List all secrets
       tags:
       - secrets
@@ -111,16 +114,10 @@ paths:
           description: Bad Request
           schema:
             $ref: '#/definitions/handlers.ErrorResponse'
-        "401":
-          description: Unauthorized
-          schema:
-            $ref: '#/definitions/handlers.ErrorResponse'
         "500":
           description: Internal Server Error
           schema:
             $ref: '#/definitions/handlers.ErrorResponse'
-      security:
-      - BasicAuth: []
       summary: Create a new secret
       tags:
       - secrets
@@ -146,16 +143,10 @@ paths:
           description: Bad Request
           schema:
             $ref: '#/definitions/handlers.ErrorResponse'
-        "401":
-          description: Unauthorized
-          schema:
-            $ref: '#/definitions/handlers.ErrorResponse'
         "500":
           description: Internal Server Error
           schema:
             $ref: '#/definitions/handlers.ErrorResponse'
-      security:
-      - BasicAuth: []
       summary: Get a secret value
       tags:
       - secrets
@@ -186,20 +177,11 @@ paths:
           description: Bad Request
           schema:
             $ref: '#/definitions/handlers.ErrorResponse'
-        "401":
-          description: Unauthorized
-          schema:
-            $ref: '#/definitions/handlers.ErrorResponse'
         "500":
           description: Internal Server Error
           schema:
             $ref: '#/definitions/handlers.ErrorResponse'
-      security:
-      - BasicAuth: []
       summary: Update a secret
       tags:
       - secrets
-securityDefinitions:
-  BasicAuth:
-    type: basic
 swagger: "2.0"

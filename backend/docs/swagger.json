@@ -18,11 +18,6 @@
     "paths": {
         "/secrets": {
             "get": {
-                "security": [
-                    {
-                        "BasicAuth": []
-                    }
-                ],
                 "description": "Returns a list of all secret names and descriptions from AWS Secrets Manager",
                 "consumes": [
                     "application/json"
@@ -44,12 +39,6 @@
                             }
                         }
                     },
-                    "401": {
-                        "description": "Unauthorized",
-                        "schema": {
-                            "$ref": "#/definitions/handlers.ErrorResponse"
-                        }
-                    },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
@@ -59,11 +48,6 @@
                 }
             },
             "post": {
-                "security": [
-                    {
-                        "BasicAuth": []
-                    }
-                ],
                 "description": "Creates a new secret in AWS Secrets Manager",
                 "consumes": [
                     "application/json"
@@ -99,12 +83,6 @@
                             "$ref": "#/definitions/handlers.ErrorResponse"
                         }
                     },
-                    "401": {
-                        "description": "Unauthorized",
-                        "schema": {
-                            "$ref": "#/definitions/handlers.ErrorResponse"
-                        }
-                    },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
@@ -116,11 +94,6 @@
         },
         "/secrets/{name}": {
             "get": {
-                "security": [
-                    {
-                        "BasicAuth": []
-                    }
-                ],
                 "description": "Returns the value of a specific secret by name",
                 "consumes": [
                     "application/json"
@@ -154,12 +127,6 @@
                             "$ref": "#/definitions/handlers.ErrorResponse"
                         }
                     },
-                    "401": {
-                        "description": "Unauthorized",
-                        "schema": {
-                            "$ref": "#/definitions/handlers.ErrorResponse"
-                        }
-                    },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
@@ -169,11 +136,6 @@
                 }
             },
             "put": {
-                "security": [
-                    {
-                        "BasicAuth": []
-                    }
-                ],
                 "description": "Updates the value of an existing secret in AWS Secrets Manager",
                 "consumes": [
                     "application/json"
@@ -216,12 +178,6 @@
                             "$ref": "#/definitions/handlers.ErrorResponse"
                         }
                     },
-                    "401": {
-                        "description": "Unauthorized",
-                        "schema": {
-                            "$ref": "#/definitions/handlers.ErrorResponse"
-                        }
-                    },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
@@ -242,15 +198,15 @@
             "properties": {
                 "description": {
                     "type": "string",
-                    "example": "API key for external service"
+                    "example": "Production database credentials"
                 },
                 "name": {
                     "type": "string",
-                    "example": "my-api-key"
+                    "example": "prd/database"
                 },
                 "value": {
                     "type": "string",
-                    "example": "{\"key\": \"value\"}"
+                    "example": "USERNAME=admin\nPASSWORD=secret123"
                 }
             }
         },
@@ -280,7 +236,7 @@
             "properties": {
                 "value": {
                     "type": "string",
-                    "example": "{\"key\": \"new-value\"}"
+                    "example": "USERNAME=admin\nPASSWORD=newsecret456"
                 }
             }
         },
@@ -288,20 +244,18 @@
             "type": "object",
             "properties": {
                 "description": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "Production database credentials"
                 },
                 "name": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "prd/database"
                 },
                 "value": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "USERNAME=admin\nPASSWORD=secret123"
                 }
             }
-        }
-    },
-    "securityDefinitions": {
-        "BasicAuth": {
-            "type": "basic"
         }
     },
     "externalDocs": {

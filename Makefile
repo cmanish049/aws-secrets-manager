@@ -1,9 +1,11 @@
-.PHONY: dev backend frontend install clean build swagger
+SWAG := $(shell go env GOPATH)/bin/swag
+
+.PHONY: dev backend frontend install clean build swagger install-swag
 
 # Run both frontend and backend concurrently
 dev:
 	@echo "Generating Swagger documentation..."
-	@cd backend && swag init -g cmd/server/main.go -o docs
+	@cd backend/cmd/server && $(SWAG) init -d .,../../internal/handlers,../../internal/services -o ../../docs
 	@echo "Starting backend and frontend..."
 	@trap 'kill 0' INT; \
 	(cd backend && go run cmd/server/main.go) & \
@@ -34,7 +36,11 @@ build:
 
 # Generate Swagger documentation
 swagger:
-	cd backend && swag init -g cmd/server/main.go -o docs
+	cd backend/cmd/server && $(SWAG) init -d .,../../internal/handlers,../../internal/services -o ../../docs
+
+# Install swag CLI tool
+install-swag:
+	go install github.com/swaggo/swag/cmd/swag@latest
 
 # Clean build artifacts
 clean:
@@ -48,12 +54,13 @@ setup: install swagger
 # Help
 help:
 	@echo "Available commands:"
-	@echo "  make dev      - Run both backend and frontend concurrently"
-	@echo "  make backend  - Run backend only"
-	@echo "  make frontend - Run frontend only"
-	@echo "  make install  - Install all dependencies"
-	@echo "  make build    - Build both projects"
-	@echo "  make swagger  - Regenerate Swagger documentation"
-	@echo "  make clean    - Remove build artifacts"
-	@echo "  make setup    - Install dependencies and generate swagger"
-	@echo "  make help     - Show this help message"
+	@echo "  make dev         - Run both backend and frontend concurrently"
+	@echo "  make backend     - Run backend only"
+	@echo "  make frontend    - Run frontend only"
+	@echo "  make install     - Install all dependencies"
+	@echo "  make install-swag - Install swag CLI tool"
+	@echo "  make build       - Build both projects"
+	@echo "  make swagger     - Regenerate Swagger documentation"
+	@echo "  make clean       - Remove build artifacts"
+	@echo "  make setup       - Install dependencies and generate swagger"
+	@echo "  make help        - Show this help message"
